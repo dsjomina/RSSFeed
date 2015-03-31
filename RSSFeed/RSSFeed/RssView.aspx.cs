@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.UI;
 using System.Xml;
 
 namespace RSSFeed
 {
-    public partial class RssView : System.Web.UI.Page
+    public partial class RssView : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            BindRssGridView();
+            BindRssRepeater();
         }
 
-        private void BindRssGridView()
+        private void BindRssRepeater()
         {
             const string rssFeedUrl = "https://www.readability.com/rseero/latest/feed";
 
@@ -23,17 +24,17 @@ namespace RSSFeed
                 if (xmlDocument.DocumentElement != null)
                 {
                     List<Feed> feedList = new List<Feed>();
-                    XmlNodeList node = xmlDocument.DocumentElement.SelectNodes("/rss/channel/item");
+                    XmlNodeList nodeList = xmlDocument.DocumentElement.SelectNodes("/rss/channel/item");
 
-                    if (node != null)
+                    if (nodeList != null)
                     {
-                        foreach (XmlNode childNode in node)
+                        foreach (XmlNode xmlNode in nodeList)
                         {
                             Feed feed = new Feed();
-                            feed.Title = childNode.SelectSingleNode("title") == null ? string.Empty : childNode.SelectSingleNode("title").InnerText;
-                            feed.Link = childNode.SelectSingleNode("link") == null ? string.Empty : childNode.SelectSingleNode("link").InnerText;
-                            feed.PublishDate = childNode.SelectSingleNode("pubDate") == null ? string.Empty : childNode.SelectSingleNode("pubDate").InnerText.Substring(0, childNode.SelectSingleNode("pubDate").InnerText.Length - 5);
-                            feed.Description = childNode.SelectSingleNode("description") == null ? string.Empty : childNode.SelectSingleNode("description").InnerText;
+                            feed.Title = xmlNode.SelectSingleNode("title") == null ? string.Empty : xmlNode.SelectSingleNode("title").InnerText;
+                            feed.Link = xmlNode.SelectSingleNode("link") == null ? string.Empty : xmlNode.SelectSingleNode("link").InnerText;
+                            feed.PublishDate = xmlNode.SelectSingleNode("pubDate") == null ? string.Empty : xmlNode.SelectSingleNode("pubDate").InnerText.Substring(0, xmlNode.SelectSingleNode("pubDate").InnerText.Length - 5);
+                            feed.Description = xmlNode.SelectSingleNode("description") == null ? string.Empty : xmlNode.SelectSingleNode("description").InnerText;
                             feedList.Add(feed);
                         }
                     }
